@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cửa hàng Hoi AE KHTN</title>
-    <!-- Updated to a newer, stable version of Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* --- COPY THIS TO styles.css --- */
@@ -284,10 +283,6 @@
             border-radius: 2px;
         }
 
-        .featured-price-area {
-            margin-top: 20px;
-        }
-
         /* Game Grid */
         .store-header {
             display: flex;
@@ -361,35 +356,6 @@
             font-size: 11px;
             color: #384959;
             margin-bottom: 10px;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 8px;
-            margin-top: auto;
-        }
-
-        .discount-badge {
-            background-color: var(--accent-green);
-            color: var(--bg-dark);
-            font-weight: bold;
-            font-size: 14px;
-            padding: 2px 5px;
-            border-radius: 2px;
-        }
-
-        .original-price {
-            color: #738895;
-            text-decoration: line-through;
-            font-size: 11px;
-        }
-
-        .final-price {
-            color: var(--text-main);
-            font-weight: bold;
-            font-size: 14px;
         }
 
         /* Modal */
@@ -557,12 +523,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container">
-            <!-- 
-                NOTE: Since I cannot access your uploaded file directly, 
-                I have used a placeholder image that fits the theme. 
-                To use your own logo, replace the src attribute below with the path to your image file.
-            -->
-            <img src="/Images/Logo.png" alt="L" class="brand-logo">
+            <img src="https://placehold.co/60x60/1b2838/66c0f4?text=LOGO" alt="Logo" class="brand-logo">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -605,8 +566,6 @@
                 <div class="filter-option" onclick="filterByGenre('Mô phỏng')">Mô phỏng</div>
                 <div class="filter-option" onclick="filterByGenre('Thể thao')">Thể thao</div>
             </div>
-            
-            <!-- Price filter section removed as requested -->
         </aside>
 
         <!-- Main Store Content -->
@@ -645,10 +604,7 @@
                 </p>
                 <div class="buy-action">
                     <div>
-                        <div style="color: #c7d5e0; font-size: 14px;">Mua <span id="modal-buy-title">null</span></div>
-                        <div class="price-row" id="modal-price-container" style="justify-content: flex-start; display: none;">
-                            <!-- Price hidden -->
-                        </div>
+                        <div style="color: #c7d5e0; font-size: 14px;">Thêm <span id="modal-buy-title" style="color: white; font-weight: bold;">null</span> vào thư viện</div>
                     </div>
                     <button class="btn-main" id="modal-add-btn">Thêm vào giỏ</button>
                 </div>
@@ -665,20 +621,20 @@
     <script>
         /* --- COPY THIS TO script.js --- */
         
-        // Data - Images changed to solid colors, no text
+        // Data - Cleaned up (No price/discount)
         const games = [
-            { id: 1, title: "null", price: 0, discount: 0, genre: "Nhập vai (RPG)", image: "https://placehold.co/600x400/101010/101010.png", desc: "Bước vào một tương lai đen tối nơi ánh đèn neon gặp gỡ thép lạnh. Chiến đấu, chém giết và thương lượng con đường của bạn qua một siêu đô thị rộng lớn.", featured: true },
-            { id: 2, title: "null", price: 0, discount: 0, genre: "Hành động", image: "https://placehold.co/600x400/2b2005/2b2005.png", desc: "Trỗi dậy, Kẻ bị lu mờ, và được dẫn dắt bởi ân sủng để nắm giữ sức mạnh của Elden Ring và trở thành Elden Lord ở Vùng đất Giữa.", featured: true },
-            { id: 3, title: "null", price: 0, discount: 0, genre: "Mô phỏng", image: "https://placehold.co/600x400/000033/000033.png", desc: "Khám phá dải ngân hà, giao thương với các nền văn minh ngoài hành tinh và xây dựng hạm đội phi thuyền của riêng bạn.", featured: false },
-            { id: 4, title: "null", price: 0, discount: 0, genre: "Phiêu lưu", image: "https://placehold.co/600x400/4a0e0e/4a0e0e.png", desc: "Một trò chơi khám phá hầm ngục lấy cảm hứng cổ điển với khả năng tạo màn chơi ngẫu nhiên vô tận.", featured: false },
-            { id: 5, title: "null", price: 0, discount: 0, genre: "Thể thao", image: "https://placehold.co/600x400/990000/990000.png", desc: "Trò chơi mô phỏng đua xe đỉnh cao. Cảm nhận từng cú va chạm và cú drift trên đường đua.", featured: false },
-            { id: 6, title: "null", price: 0, discount: 0, genre: "Chiến thuật", image: "https://placehold.co/600x400/1a1a1a/1a1a1a.png", desc: "Chiến thuật lén lút hạng nặng lấy bối cảnh Nhật Bản cổ đại. Điều khiển một đội ngũ các chuyên gia chết người.", featured: false },
-            { id: 7, title: "null", price: 0, discount: 0, genre: "Hành động", image: "https://placehold.co/600x400/2e3b23/2e3b23.png", desc: "Sống sót qua ngày tận thế cùng bạn bè trong trò chơi bắn súng miễn phí này.", featured: true },
-            { id: 8, title: "null", price: 0, discount: 0, genre: "Mô phỏng", image: "https://placehold.co/600x400/3e5c26/3e5c26.png", desc: "Thư giãn và phát triển trang trại của bạn trong một thung lũng yên bình.", featured: false },
-            { id: 9, title: "null", price: 0, discount: 0, genre: "Nhập vai (RPG)", image: "https://placehold.co/600x400/220044/220044.png", desc: "Du hành qua hư không và chiến đấu với những nỗi kinh hoàng cổ xưa.", featured: false },
-            { id: 10, title: "null", price: 0, discount: 0, genre: "Phiêu lưu", image: "https://placehold.co/600x400/3c8e22/3c8e22.png", desc: "Xây dựng bất cứ thứ gì bạn có thể tưởng tượng trong một thế giới khối 3D.", featured: false },
-            { id: 11, title: "null", price: 0, discount: 0, genre: "Chiến thuật", image: "https://placehold.co/600x400/440000/440000.png", desc: "Chỉ huy các đội quân khổng lồ ở châu Âu thời trung cổ.", featured: false },
-            { id: 12, title: "null", price: 0, discount: 0, genre: "Thể thao", image: "https://placehold.co/600x400/000000/000000.png", desc: "Trò chơi pong tương lai với vật lý và các vật phẩm tăng sức mạnh.", featured: false }
+            { id: 1, title: "null", genre: "Nhập vai (RPG)", image: "https://placehold.co/600x400/101010/101010.png", desc: "desc", featured: true },
+            { id: 2, title: "null", genre: "Hành động", image: "https://placehold.co/600x400/2b2005/2b2005.png", desc: "desc", featured: true },
+            { id: 3, title: "null", genre: "Mô phỏng", image: "https://placehold.co/600x400/000033/000033.png", desc: "desc", featured: false },
+            { id: 4, title: "null", genre: "Phiêu lưu", image: "https://placehold.co/600x400/4a0e0e/4a0e0e.png", desc: "desc", featured: false },
+            { id: 5, title: "null", genre: "Thể thao", image: "https://placehold.co/600x400/990000/990000.png", desc: "desc", featured: false },
+            { id: 6, title: "null", genre: "Chiến thuật", image: "https://placehold.co/600x400/1a1a1a/1a1a1a.png", desc: "desc", featured: false },
+            { id: 7, title: "null", genre: "Hành động", image: "https://placehold.co/600x400/2e3b23/2e3b23.png", desc: "desc", featured: true },
+            { id: 8, title: "null", genre: "Mô phỏng", image: "https://placehold.co/600x400/3e5c26/3e5c26.png", desc: "desc", featured: false },
+            { id: 9, title: "null", genre: "Nhập vai (RPG)", image: "https://placehold.co/600x400/220044/220044.png", desc: "desc", featured: false },
+            { id: 10, title: "null", genre: "Phiêu lưu", image: "https://placehold.co/600x400/3c8e22/3c8e22.png", desc: "desc", featured: false },
+            { id: 11, title: "null", genre: "Chiến thuật", image: "https://placehold.co/600x400/440000/440000.png", desc: "desc", featured: false },
+            { id: 12, title: "null", genre: "Thể thao", image: "https://placehold.co/600x400/000000/000000.png", desc: "desc", featured: false }
         ];
 
         let cart = [];
@@ -689,7 +645,6 @@
         const featuredContainer = document.getElementById('featured-carousel');
         const searchInput = document.getElementById('search-input');
         
-        // Initialize Icons Safety Check
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
@@ -717,7 +672,6 @@
                             </div>
                         </div>
                         <div class="featured-desc">${game.desc}</div>
-                        <!-- Price Removed -->
                     </div>
                 </div>
             `).join('');
@@ -744,9 +698,6 @@
                     <div class="game-info">
                         <div class="game-title">${game.title}</div>
                         <div class="game-tags">${game.genre}</div>
-                        <div class="price-row">
-                            ${renderPriceHTML(game)}
-                        </div>
                     </div>
                 </div>
             `).join('');
@@ -755,11 +706,6 @@
             if (typeof lucide !== 'undefined') {
                  lucide.createIcons();
             }
-        }
-
-        function renderPriceHTML(game) {
-            // Price removed entirely
-            return "";
         }
 
         // Filters
@@ -776,8 +722,6 @@
             applyFilters();
         }
 
-        // Price filter function removed
-
         function applyFilters() {
             let filtered = games;
 
@@ -785,8 +729,6 @@
             if (currentFilter !== 'All') {
                 filtered = filtered.filter(g => g.genre === currentFilter);
             }
-
-            // Price filter logic removed
 
             // Search Text Filter
             const term = searchInput.value.toLowerCase();
@@ -811,9 +753,6 @@
             document.getElementById('modal-genre').innerText = selectedGame.genre;
             document.getElementById('modal-desc').innerText = selectedGame.desc;
             document.getElementById('modal-buy-title').innerText = selectedGame.title;
-            
-            // Hide price container
-            document.getElementById('modal-price-container').style.display = 'none';
             
             // Add btn listener
             const btn = document.getElementById('modal-add-btn');
@@ -862,8 +801,7 @@
                 alert("Giỏ hàng của bạn đang trống!");
                 return;
             }
-            let total = cart.reduce((acc, curr) => acc + (curr.price * (1 - curr.discount/100)), 0);
-            alert(`Các mặt hàng trong giỏ:\n${cart.map(i => i.title).join('\n')}\n\nTổng cộng: $${total.toFixed(2)}`);
+            alert(`Các mặt hàng trong giỏ:\n${cart.map(i => i.title).join('\n')}`);
         }
 
     </script>
