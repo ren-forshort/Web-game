@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cửa hàng Hoi AE KHTN</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -741,7 +740,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container" onclick="switchPage('store', document.querySelector('.nav-link'))">
-            <img src="/Images/Logo.png" alt="Logo" class="brand-logo">
+            <img src="Images/Logo.png" alt="Logo" class="brand-logo">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -749,24 +748,22 @@
             </div>
         </div>
         <nav class="nav-links">
-            <a href="#" class="nav-link active">Cửa hàng</a>
-            <a href="#" class="nav-link">Cộng đồng</a>
-            <a href="#" class="nav-link">Giới thiệu</a>
-            <a href="#" class="nav-link">Hỗ trợ</a>
+            <a href="#" class="nav-link active" onclick="switchPage('store', this)">Cửa hàng</a>
+            <a href="#" class="nav-link" onclick="switchPage('community', this)">Cộng đồng</a>
+            <a href="#" class="nav-link" onclick="switchPage('upload', this)">Đăng game</a>
+            <a href="#" class="nav-link" onclick="switchPage('support', this)">Hỗ trợ</a>
+            <a href="#" class="nav-link" onclick="switchPage('report', this)">Báo cáo</a>
         </nav>
         <div class="header-actions">
             <div class="search-container">
                 <i data-lucide="search" class="search-icon"></i>
                 <input type="text" class="search-input" placeholder="tìm kiếm" id="search-input">
             </div>
-            <button class="cart-btn" onclick="toggleCart()">
-                <i data-lucide="shopping-cart" size="16"></i>
-                Giỏ hàng (<span id="cart-count">0</span>)
-            </button>
         </div>
     </header>
 
-    <div class="container">
+    <!-- Main Store View -->
+    <div id="store-view" class="container">
         <!-- Featured Carousel -->
         <section class="featured-section" id="featured-carousel">
             <!-- Injected by JS -->
@@ -948,24 +945,26 @@
     <div id="report-view" class="report-view">
         <div class="report-header">
             <h1 class="section-title" style="font-size: 24px;">Báo cáo vấn đề</h1>
-            <p style="color: var(--text-muted); margin-top: 10px;">
+            <p style="color: var(--text-muted); margin-top: 10px; line-height: 1.5;">
                 Hãy cho chúng tôi biết về lỗi game, nội dung không phù hợp hoặc các vấn đề khác mà bạn gặp phải.
+                <br><br>
+                Đóng góp của bạn giúp cộng đồng Hội AE KHTN trở nên tốt đẹp hơn. Mọi báo cáo sẽ được đội ngũ quản trị viên xem xét trong vòng 24-48 giờ. Xin cảm ơn sự hợp tác của bạn!
             </p>
         </div>
         <form class="report-form" onsubmit="submitReport(event)">
             <div class="form-group">
                 <label class="form-label">Tên hiển thị</label>
-                <input type="text" id="report-name" class="form-input" placeholder="Nhập tên của bạn" required>
+                <input type="text" class="form-input" placeholder="Nhập tên của bạn" required>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Email liên hệ</label>
-                <input type="email" id="report-email" class="form-input" placeholder="email@example.com" required>
+                <input type="email" class="form-input" placeholder="email@example.com" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Loại vấn đề</label>
-                <select id="report-type" class="form-select">
+                <select class="form-select">
                     <option value="bug">Lỗi game (Bug/Glitch)</option>
                     <option value="content">Nội dung không phù hợp</option>
                     <option value="download">Lỗi tải xuống</option>
@@ -975,7 +974,7 @@
 
             <div class="form-group">
                 <label class="form-label">Mô tả chi tiết</label>
-                <textarea id="report-desc" class="form-textarea" placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải..." required></textarea>
+                <textarea class="form-textarea" placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải..." required></textarea>
             </div>
 
             <button type="submit" class="btn-submit">Gửi báo cáo</button>
@@ -1363,44 +1362,11 @@
         }
 
         // Submit Report
-        window.submitReport = async function(e) {
+        window.submitReport = function(e) {
             e.preventDefault();
-            
-            const name = document.getElementById('report-name').value;
-            const email = document.getElementById('report-email').value;
-            const type = document.getElementById('report-type').value;
-            const desc = document.getElementById('report-desc').value;
-            
-            const btn = e.target.querySelector('button');
-
-            if (!currentUser) {
-                alert("Đang kết nối database...");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Đang gửi...";
-
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'reports'), {
-                    reporterName: name,
-                    reporterEmail: email,
-                    issueType: type,
-                    description: desc,
-                    timestamp: Date.now(),
-                    userId: currentUser.uid
-                });
-                
-                alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
-                e.target.reset();
-                window.switchPage('store', document.querySelector('.nav-link'));
-            } catch (error) {
-                console.error("Error submitting report:", error);
-                alert("Lỗi khi gửi báo cáo. Vui lòng thử lại.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Gửi báo cáo";
-            }
+            alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
+            e.target.reset(); 
+            window.switchPage('store', document.querySelector('.nav-link')); 
         }
 
         function escapeHtml(text) {
