@@ -597,6 +597,12 @@
             border-radius: 4px;
             border: 1px solid var(--bg-tertiary);
         }
+        .preview-cover-container {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
+        }
+
         .remove-img {
             position: absolute;
             top: -5px;
@@ -772,7 +778,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container" onclick="switchPage('store', document.querySelector('.nav-link'))">
-            <img src="https://placehold.co/60x60/1b2838/66c0f4?text=LOGO" alt="Logo" class="brand-logo">
+            <img src="Images/Logo.png" alt="Logo" class="brand-logo" onerror="this.src='https://placehold.co/60x60/1b2838/66c0f4?text=LOGO'">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -890,18 +896,29 @@
                 </select>
             </div>
 
-            <!-- 8. Hình minh họa (Drag and Drop) -->
+            <!-- 8. Hình ảnh (Cover Image - Chọn 1) -->
             <div class="form-group">
-                <label class="form-label">Hình ảnh (Chọn hoặc Kéo thả nhiều ảnh) <span style="color:red">*</span></label>
-                <div id="drop-zone" class="drop-zone">
-                    <i data-lucide="upload-cloud" style="margin-bottom: 10px;"></i>
-                    <p>Kéo thả hình ảnh vào đây hoặc click để chọn</p>
-                    <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                <label class="form-label">Ảnh bìa (Chọn 1 ảnh) <span style="color:red">*</span></label>
+                <div id="cover-drop-zone" class="drop-zone">
+                    <i data-lucide="image" style="margin-bottom: 10px;"></i>
+                    <p>Kéo thả ảnh bìa hoặc click để chọn</p>
+                    <input type="file" id="cover-input" accept="image/*" style="display: none;">
                 </div>
-                <div id="image-preview" class="image-preview-grid"></div>
+                <div id="cover-preview" class="preview-cover-container"></div>
             </div>
 
-            <!-- 9. Ghi chú thêm -->
+            <!-- 9. Hình ảnh (Gallery Images - Chọn nhiều) -->
+            <div class="form-group">
+                <label class="form-label">Ảnh thư viện (Chọn nhiều ảnh, minh họa gameplay) <span style="color:red">*</span></label>
+                <div id="gallery-drop-zone" class="drop-zone">
+                    <i data-lucide="images" style="margin-bottom: 10px;"></i>
+                    <p>Kéo thả các ảnh khác vào đây</p>
+                    <input type="file" id="gallery-input" multiple accept="image/*" style="display: none;">
+                </div>
+                <div id="gallery-preview" class="image-preview-grid"></div>
+            </div>
+
+            <!-- 10. Ghi chú thêm -->
             <div class="form-group">
                 <label class="form-label">Ghi chú thêm</label>
                 <textarea id="game-notes" class="form-textarea" placeholder="Hướng dẫn cài đặt đặc biệt, cấu hình yêu cầu, v.v..." style="min-height: 80px;"></textarea>
@@ -1084,7 +1101,6 @@
         const appId = 'hoi-ae-store-v1';
         
         let currentUser = null;
-        // Since we have direct config now, we assume it's available
         let isFirebaseAvailable = true;
 
         // Initialize Auth
@@ -1100,74 +1116,97 @@
                 loadUserGames();
             } catch (error) {
                 console.error("Auth failed", error);
-                // Fallback for AI environment if custom token is present (optional safety)
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                     try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                        currentUser = auth.currentUser;
-                        loadCommunityPosts();
-                        loadUserGames();
-                     } catch(e) { console.error("Fallback Auth failed", e); }
-                }
             }
         }
         initAuth();
 
-        // Drag and Drop Logic
-        let uploadedFiles = [];
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const imagePreview = document.getElementById('image-preview');
+        // --- DRAG & DROP LOGIC ---
+        // Separate variables for Cover and Gallery
+        let uploadedCover = null;
+        let uploadedGallery = [];
 
-        if (dropZone) {
-            dropZone.addEventListener('click', () => fileInput.click());
+        // Cover Zone
+        const coverDropZone = document.getElementById('cover-drop-zone');
+        const coverInput = document.getElementById('cover-input');
+        const coverPreview = document.getElementById('cover-preview');
 
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            });
-
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
-            });
-
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-                handleFiles(e.dataTransfer.files);
-            });
-
-            fileInput.addEventListener('change', () => {
-                handleFiles(fileInput.files);
-            });
+        if (coverDropZone) {
+            coverDropZone.addEventListener('click', () => coverInput.click());
+            coverDropZone.addEventListener('dragover', (e) => { e.preventDefault(); coverDropZone.classList.add('dragover'); });
+            coverDropZone.addEventListener('dragleave', () => coverDropZone.classList.remove('dragover'));
+            coverDropZone.addEventListener('drop', (e) => { e.preventDefault(); coverDropZone.classList.remove('dragover'); handleCoverFile(e.dataTransfer.files); });
+            coverInput.addEventListener('change', () => handleCoverFile(coverInput.files));
         }
 
-        function handleFiles(files) {
+        function handleCoverFile(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedCover = e.target.result;
+                        renderCoverPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function renderCoverPreview() {
+            if (uploadedCover) {
+                coverPreview.innerHTML = `
+                    <div class="preview-item">
+                        <img src="${uploadedCover}" class="preview-img">
+                        <button type="button" class="remove-img" onclick="removeCoverImage()">x</button>
+                    </div>`;
+            } else {
+                coverPreview.innerHTML = '';
+            }
+        }
+
+        window.removeCoverImage = function() {
+            uploadedCover = null;
+            renderCoverPreview();
+        }
+
+        // Gallery Zone
+        const galleryDropZone = document.getElementById('gallery-drop-zone');
+        const galleryInput = document.getElementById('gallery-input');
+        const galleryPreview = document.getElementById('gallery-preview');
+
+        if (galleryDropZone) {
+            galleryDropZone.addEventListener('click', () => galleryInput.click());
+            galleryDropZone.addEventListener('dragover', (e) => { e.preventDefault(); galleryDropZone.classList.add('dragover'); });
+            galleryDropZone.addEventListener('dragleave', () => galleryDropZone.classList.remove('dragover'));
+            galleryDropZone.addEventListener('drop', (e) => { e.preventDefault(); galleryDropZone.classList.remove('dragover'); handleGalleryFiles(e.dataTransfer.files); });
+            galleryInput.addEventListener('change', () => handleGalleryFiles(galleryInput.files));
+        }
+
+        function handleGalleryFiles(files) {
             Array.from(files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        // Store the Base64 string
-                        uploadedFiles.push(e.target.result);
-                        renderImagePreview();
+                        uploadedGallery.push(e.target.result);
+                        renderGalleryPreview();
                     };
                     reader.readAsDataURL(file);
                 }
             });
         }
 
-        function renderImagePreview() {
-            imagePreview.innerHTML = uploadedFiles.map((src, index) => `
+        function renderGalleryPreview() {
+            galleryPreview.innerHTML = uploadedGallery.map((src, index) => `
                 <div class="preview-item">
                     <img src="${src}" class="preview-img">
-                    <button type="button" class="remove-img" onclick="removeImage(${index})">x</button>
+                    <button type="button" class="remove-img" onclick="removeGalleryImage(${index})">x</button>
                 </div>
             `).join('');
         }
 
-        window.removeImage = function(index) {
-            uploadedFiles.splice(index, 1);
-            renderImagePreview();
+        window.removeGalleryImage = function(index) {
+            uploadedGallery.splice(index, 1);
+            renderGalleryPreview();
         }
 
         // Load Posts Real-time
@@ -1418,14 +1457,15 @@
             const notes = document.getElementById('game-notes').value;
             
             // Check files first
-            if (uploadedFiles.length === 0) {
-                alert("Vui lòng tải lên ít nhất 1 hình ảnh minh họa!");
+            if (!uploadedCover) {
+                alert("Vui lòng tải lên ảnh bìa!");
                 return;
             }
-
-            // Using the first image as the main thumbnail, and all as gallery
-            const mainImage = uploadedFiles[0];
-            const galleryImages = uploadedFiles;
+            if (uploadedGallery.length === 0) {
+                 // Warning only, can proceed without gallery if needed, but lets enforce it for quality
+                 alert("Vui lòng tải lên ít nhất 1 ảnh thư viện!");
+                 return;
+            }
 
             const btn = e.target.querySelector('button');
 
@@ -1446,8 +1486,8 @@
                     downloadUrl: downloadLink,
                     demoUrl: demoLink,
                     genre: genre,
-                    image: mainImage,
-                    gallery: galleryImages, // Store all images
+                    image: uploadedCover, // Single Cover
+                    gallery: uploadedGallery, // Array of Gallery
                     notes: notes,
                     releaseDate: new Date().toISOString().split('T')[0],
                     timestamp: Date.now(),
@@ -1456,8 +1496,10 @@
                 
                 alert("Đăng game thành công! Game của bạn đã xuất hiện trên cửa hàng.");
                 e.target.reset();
-                uploadedFiles = []; // Clear files
-                renderImagePreview();
+                uploadedCover = null;
+                uploadedGallery = [];
+                renderCoverPreview();
+                renderGalleryPreview();
                 window.switchPage('store', document.querySelector('.nav-link'));
             } catch (error) {
                 console.error("Error submitting game:", error);
@@ -1911,13 +1953,6 @@ Play Game for fun!`,
             
             if(element) element.classList.add('active');
             if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        window.submitReport = function(e) {
-            e.preventDefault();
-            alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
-            e.target.reset(); 
-            window.switchPage('store', document.querySelector('.nav-link')); 
         }
 
     </script>
