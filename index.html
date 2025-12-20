@@ -462,8 +462,9 @@
             padding: 20px;
             border-radius: 4px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column; /* CHANGED: Stack vertically */
+            gap: 15px; /* Add spacing */
+            align-items: stretch; /* Stretch to width */
         }
 
         .btn-download {
@@ -478,6 +479,7 @@
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center; /* Center content */
             gap: 8px;
             text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
             transition: all 0.2s;
@@ -853,7 +855,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container" onclick="switchPage('store', document.querySelector('.nav-link'))">
-            <img src="fit logo.png" alt="Logo" class="brand-logo" onerror="this.src='https://placehold.co/60x60/1b2838/66c0f4?text=LOGO'">
+            <img src="Images/Logo.png" alt="Logo" class="brand-logo" onerror="this.src='https://placehold.co/60x60/1b2838/66c0f4?text=LOGO'">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -1821,20 +1823,6 @@ Play Game for fun!`,
                 featured: true,
                 downloadUrl: "https://itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com/upload2/game/4132387/15889212?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3edfcce40115d057d0b5606758e7e9ee%2F20251220%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251220T103410Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=d3a600bc3f527de65a075d60f3ef81e8166b72fcf1e1fe76548f96ca9718ed3f",
                 releaseDate: "2025-12-19"
-            },
-            {
-                id: 2,
-                title: "Game 2",
-                genre: "Hành động",
-                image: "https://placehold.co/600x400/2b2005/2b2005.png",
-                gallery: [
-                    "https://placehold.co/800x400/2b2005/ffffff.png?text=Action+1",
-                    "https://placehold.co/800x400/4a3810/ffffff.png?text=Action+2"
-                ],
-                desc: "Trỗi dậy, Kẻ bị lu mờ, và được dẫn dắt bởi ân sủng.",
-                featured: true,
-                downloadUrl: "https://github.com",
-                releaseDate: "2024-02-25"
             },
             {
                 id: 3,
