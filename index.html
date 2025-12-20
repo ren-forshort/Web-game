@@ -462,8 +462,8 @@
             padding: 20px;
             border-radius: 4px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .btn-download {
@@ -486,6 +486,80 @@
         .btn-download:hover {
             background: linear-gradient(90deg, #4da8e0 5%, #154670 95%);
             transform: scale(1.02);
+        }
+        
+        /* Review Section Styles */
+        .review-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--bg-tertiary);
+        }
+        
+        .review-input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .star {
+            color: #555;
+            transition: color 0.2s;
+        }
+        
+        .star.active {
+            color: #FFD700;
+        }
+
+        .btn-review {
+            align-self: flex-start;
+            background: var(--bg-tertiary);
+            color: var(--text-main);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        .btn-review:hover {
+            background: #3d5a73;
+        }
+
+        .reviews-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-review-item {
+            background: rgba(0,0,0,0.15);
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .review-author {
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+        
+        .review-stars {
+            color: #FFD700;
         }
 
         /* Report & Upload Page Styles */
@@ -597,12 +671,6 @@
             border-radius: 4px;
             border: 1px solid var(--bg-tertiary);
         }
-        .preview-cover-container {
-            width: 100%;
-            max-width: 300px;
-            margin-top: 15px;
-        }
-
         .remove-img {
             position: absolute;
             top: -5px;
@@ -1060,9 +1128,6 @@
                     Mô tả trò chơi sẽ xuất hiện ở đây.
                 </p>
                 <div class="buy-action">
-                    <div>
-                        <div style="color: #c7d5e0; font-size: 14px;">Thêm <span id="modal-buy-title" style="color: white; font-weight: bold;">null</span> vào thư viện</div>
-                    </div>
                     <!-- Action Buttons -->
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <a href="#" target="_blank" class="btn-download" id="modal-download-btn">
@@ -1072,6 +1137,28 @@
                             <i data-lucide="play-circle" size="18"></i> Video Demo
                         </a>
                     </div>
+                    
+                    <!-- Review Input Section -->
+                    <div class="review-section">
+                        <div class="review-input-box">
+                            <h4 style="color: var(--text-main); margin-bottom: 5px;">Đánh giá trò chơi</h4>
+                            <div class="star-rating" id="modal-star-input">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <input type="text" id="review-username" class="form-input" placeholder="Tên của bạn" style="padding: 8px;">
+                            <textarea id="review-comment" class="form-textarea" placeholder="Viết bình luận của bạn..." style="min-height: 80px; padding: 8px;"></textarea>
+                            <button class="btn-review" onclick="submitReview()">Gửi đánh giá</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews List -->
+                <div id="modal-reviews-list" class="reviews-list">
+                    <!-- Reviews will be injected here -->
                 </div>
             </div>
         </div>
@@ -1080,7 +1167,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, increment, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, increment, getDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- FIREBASE SETUP ---
         // Using your specific configuration
@@ -1102,6 +1189,7 @@
         
         let currentUser = null;
         let isFirebaseAvailable = true;
+        let globalReviews = []; // Store all reviews to filter locally
 
         // Initialize Auth
         async function initAuth() {
@@ -1114,6 +1202,7 @@
                 // Start listening to posts and games only after auth
                 loadCommunityPosts();
                 loadUserGames();
+                loadAllReviews(); // Load reviews
             } catch (error) {
                 console.error("Auth failed", error);
             }
@@ -1208,6 +1297,115 @@
             uploadedGallery.splice(index, 1);
             renderGalleryPreview();
         }
+
+        // --- REVIEWS LOGIC ---
+        let currentRating = 0;
+        
+        // Star Rating Interaction
+        const starContainer = document.getElementById('modal-star-input');
+        if(starContainer) {
+            const stars = starContainer.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    currentRating = parseInt(star.getAttribute('data-value'));
+                    updateStarVisuals(currentRating);
+                });
+            });
+        }
+
+        function updateStarVisuals(rating) {
+            const stars = document.querySelectorAll('#modal-star-input .star');
+            stars.forEach(s => {
+                const val = parseInt(s.getAttribute('data-value'));
+                if (val <= rating) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+        }
+
+        // Load All Reviews (Rule 2: Fetch all, filter locally)
+        function loadAllReviews() {
+            const reviewsRef = collection(db, 'artifacts', appId, 'public', 'data', 'game_reviews');
+            onSnapshot(reviewsRef, (snapshot) => {
+                globalReviews = [];
+                snapshot.forEach(doc => {
+                    globalReviews.push({ id: doc.id, ...doc.data() });
+                });
+                // If modal is open, refresh reviews
+                if (selectedGame && document.getElementById('game-modal').classList.contains('open')) {
+                    renderReviewsForGame(selectedGame.id);
+                }
+            });
+        }
+
+        function renderReviewsForGame(gameId) {
+            const container = document.getElementById('modal-reviews-list');
+            // Filter reviews for this gameId
+            // Ensure ID comparison is safe (string vs number)
+            const gameReviews = globalReviews.filter(r => String(r.gameId) === String(gameId));
+            
+            // Sort by newst
+            gameReviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            if (gameReviews.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>';
+                return;
+            }
+
+            container.innerHTML = gameReviews.map(review => {
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                return `
+                <div class="user-review-item">
+                    <div class="review-header">
+                        <span class="review-author">${escapeHtml(review.userName)}</span>
+                        <span class="review-stars">${stars}</span>
+                    </div>
+                    <div style="color: var(--text-main); font-size: 14px;">${escapeHtml(review.comment)}</div>
+                    <div style="color: var(--text-muted); font-size: 11px; margin-top: 5px;">${new Date(review.timestamp).toLocaleDateString('vi-VN')}</div>
+                </div>`;
+            }).join('');
+        }
+
+        window.submitReview = async function() {
+            if (!currentUser) { alert("Vui lòng đợi kết nối..."); return; }
+            if (!selectedGame) return;
+            
+            const username = document.getElementById('review-username').value;
+            const comment = document.getElementById('review-comment').value;
+
+            if (!username.trim() || !comment.trim() || currentRating === 0) {
+                alert("Vui lòng chọn số sao, nhập tên và nội dung bình luận.");
+                return;
+            }
+
+            const btn = document.querySelector('.btn-review');
+            btn.disabled = true;
+            btn.innerText = "Đang gửi...";
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'game_reviews'), {
+                    gameId: String(selectedGame.id), // Store as string for consistency
+                    userId: currentUser.uid,
+                    userName: username,
+                    rating: currentRating,
+                    comment: comment,
+                    timestamp: Date.now()
+                });
+                
+                // Reset form
+                document.getElementById('review-username').value = '';
+                document.getElementById('review-comment').value = '';
+                currentRating = 0;
+                updateStarVisuals(0);
+                
+            } catch (error) {
+                console.error("Review failed:", error);
+                alert("Lỗi khi gửi đánh giá.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Gửi đánh giá";
+            }
+        }
+
 
         // Load Posts Real-time
         function loadCommunityPosts() {
@@ -1786,7 +1984,7 @@ Play Game for fun!`,
                         <div>
                             <div class="featured-title">${game.title}</div>
                             <div class="featured-tags">
-                                <span class="tag">Bán chạy nhất</span>
+                                <span class="tag">Được yêu thích nhất</span>
                                 <span class="tag">${game.genre}</span>
                             </div>
                         </div>
@@ -1873,7 +2071,9 @@ Play Game for fun!`,
             }
             document.getElementById('modal-desc').innerText = fullDesc;
             
-            document.getElementById('modal-buy-title').innerText = selectedGame.title;
+            // Re-use currentRating if previously set, or reset
+            currentRating = 0;
+            updateStarVisuals(0);
             
             const releaseDate = formatGameDate(selectedGame.releaseDate);
             document.getElementById('modal-release').innerText = `Phát hành: ${releaseDate}`;
@@ -1893,6 +2093,8 @@ Play Game for fun!`,
             } else {
                 demoBtn.style.display = 'none';
             }
+            
+            renderReviewsForGame(id);
 
             updateModalGallery();
             modal.classList.add('open');
@@ -1953,6 +2155,13 @@ Play Game for fun!`,
             
             if(element) element.classList.add('active');
             if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.submitReport = function(e) {
+            e.preventDefault();
+            alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
+            e.target.reset(); 
+            window.switchPage('store', document.querySelector('.nav-link')); 
         }
 
     </script>
