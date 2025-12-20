@@ -454,6 +454,7 @@
             line-height: 1.6;
             margin-bottom: 30px;
             color: var(--text-main);
+            white-space: pre-wrap; /* This makes the text respect new lines/Enter key */
         }
 
         .buy-action {
@@ -560,13 +561,65 @@
             color: white;
         }
 
-        /* Community Page Styles */
+        /* Drag and Drop Styles */
+        .drop-zone {
+            border: 2px dashed var(--bg-tertiary);
+            padding: 30px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent-blue);
+            background: rgba(102, 192, 244, 0.1);
+            color: var(--text-main);
+        }
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .preview-item {
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--bg-tertiary);
+        }
+        .remove-img {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Community Styles */
         .community-container {
             display: none;
             max-width: 800px;
             margin: 0 auto;
         }
-
         .post-creator {
             background: var(--bg-secondary);
             padding: 20px;
@@ -574,20 +627,17 @@
             margin-bottom: 30px;
             border: 1px solid var(--bg-tertiary);
         }
-
         .post-feed {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
         .community-post {
             background: var(--bg-secondary);
             padding: 20px;
             border-radius: 4px;
             border: 1px solid var(--bg-tertiary);
         }
-
         .post-header {
             display: flex;
             justify-content: space-between;
@@ -595,20 +645,16 @@
             font-size: 12px;
             color: var(--text-muted);
         }
-
         .post-author {
             color: var(--accent-blue);
             font-weight: bold;
             font-size: 14px;
         }
-
         .post-content {
             color: var(--text-main);
             line-height: 1.5;
             white-space: pre-wrap;
         }
-
-        /* Community Actions Styles */
         .post-actions {
             display: flex;
             gap: 20px;
@@ -617,7 +663,6 @@
             padding-top: 10px;
             align-items: center;
         }
-
         .vote-group {
             display: flex;
             align-items: center;
@@ -626,7 +671,6 @@
             padding: 5px 12px;
             border-radius: 20px;
         }
-
         .vote-btn {
             background: none;
             border: none;
@@ -637,23 +681,18 @@
             padding: 2px;
             transition: color 0.2s;
         }
-
         .vote-btn:hover {
             color: var(--accent-blue);
         }
-
         .vote-btn.active {
             color: var(--accent-green);
         }
-
         .vote-btn.down:hover {
             color: #ff4d4d;
         }
-
         .vote-btn.down.active {
             color: #ff4d4d;
         }
-
         .vote-count {
             font-weight: bold;
             font-size: 14px;
@@ -661,7 +700,6 @@
             min-width: 20px;
             text-align: center;
         }
-
         .reply-btn {
             background: none;
             border: none;
@@ -673,11 +711,9 @@
             gap: 6px;
             transition: color 0.2s;
         }
-
         .reply-btn:hover {
             color: var(--text-main);
         }
-
         .replies-section {
             margin-top: 15px;
             padding-left: 20px;
@@ -686,13 +722,11 @@
             flex-direction: column;
             gap: 10px;
         }
-
         .reply-item {
             background: rgba(255,255,255,0.03);
             padding: 10px;
             border-radius: 4px;
         }
-
         .reply-form {
             display: none;
             margin-top: 10px;
@@ -702,11 +736,9 @@
             padding: 15px;
             border-radius: 4px;
         }
-
         .reply-form.open {
             display: flex;
         }
-
         .loading-text {
             text-align: center; 
             color: var(--text-muted); 
@@ -740,7 +772,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container" onclick="switchPage('store', document.querySelector('.nav-link'))">
-            <img src="Images/Logo.png" alt="Logo" class="brand-logo">
+            <img src="https://placehold.co/60x60/1b2838/66c0f4?text=LOGO" alt="Logo" class="brand-logo">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -780,6 +812,8 @@
                 <div class="filter-option" onclick="filterByGenre('Phiêu lưu')">Phiêu lưu</div>
                 <div class="filter-option" onclick="filterByGenre('Mô phỏng')">Mô phỏng</div>
                 <div class="filter-option" onclick="filterByGenre('Thể thao')">Thể thao</div>
+                <div class="filter-option" onclick="filterByGenre('Parkour')">Parkour</div>
+                <div class="filter-option" onclick="filterByGenre('Đua xe')">Đua xe</div>
             </div>
         </aside>
 
@@ -787,9 +821,6 @@
         <main>
             <div class="store-header">
                 <div class="section-title">Đang xem <span id="current-genre">Tất cả trò chơi</span></div>
-                <div style="font-size: 12px; color: var(--text-muted);">
-                    Sắp xếp theo: <span style="color:white; cursor:pointer;">Bán chạy nhất</span>
-                </div>
             </div>
 
             <div class="games-grid" id="games-grid">
@@ -853,14 +884,21 @@
                     <option value="Phiêu lưu">Phiêu lưu</option>
                     <option value="Mô phỏng">Mô phỏng</option>
                     <option value="Thể thao">Thể thao</option>
+                    <option value="Parkour">Parkour</option>
+                    <option value="Đua xe">Đua xe</option>
                     <option value="Khác">Khác</option>
                 </select>
             </div>
 
-            <!-- 8. Hình minh họa -->
+            <!-- 8. Hình minh họa (Drag and Drop) -->
             <div class="form-group">
-                <label class="form-label">Link hình minh họa (URL) <span style="color:red">*</span></label>
-                <input type="url" id="game-image" class="form-input" placeholder="https://example.com/image.png" required>
+                <label class="form-label">Hình ảnh (Chọn hoặc Kéo thả nhiều ảnh) <span style="color:red">*</span></label>
+                <div id="drop-zone" class="drop-zone">
+                    <i data-lucide="upload-cloud" style="margin-bottom: 10px;"></i>
+                    <p>Kéo thả hình ảnh vào đây hoặc click để chọn</p>
+                    <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                </div>
+                <div id="image-preview" class="image-preview-grid"></div>
             </div>
 
             <!-- 9. Ghi chú thêm -->
@@ -954,17 +992,17 @@
         <form class="report-form" onsubmit="submitReport(event)">
             <div class="form-group">
                 <label class="form-label">Tên hiển thị</label>
-                <input type="text" class="form-input" placeholder="Nhập tên của bạn" required>
+                <input type="text" id="report-name" class="form-input" placeholder="Nhập tên của bạn" required>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Email liên hệ</label>
-                <input type="email" class="form-input" placeholder="email@example.com" required>
+                <input type="email" id="report-email" class="form-input" placeholder="email@example.com" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Loại vấn đề</label>
-                <select class="form-select">
+                <select id="report-type" class="form-select">
                     <option value="bug">Lỗi game (Bug/Glitch)</option>
                     <option value="content">Nội dung không phù hợp</option>
                     <option value="download">Lỗi tải xuống</option>
@@ -974,7 +1012,7 @@
 
             <div class="form-group">
                 <label class="form-label">Mô tả chi tiết</label>
-                <textarea class="form-textarea" placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải..." required></textarea>
+                <textarea id="report-desc" class="form-textarea" placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải..." required></textarea>
             </div>
 
             <button type="submit" class="btn-submit">Gửi báo cáo</button>
@@ -1074,6 +1112,63 @@
             }
         }
         initAuth();
+
+        // Drag and Drop Logic
+        let uploadedFiles = [];
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imagePreview = document.getElementById('image-preview');
+
+        if (dropZone) {
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+        }
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Store the Base64 string
+                        uploadedFiles.push(e.target.result);
+                        renderImagePreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function renderImagePreview() {
+            imagePreview.innerHTML = uploadedFiles.map((src, index) => `
+                <div class="preview-item">
+                    <img src="${src}" class="preview-img">
+                    <button type="button" class="remove-img" onclick="removeImage(${index})">x</button>
+                </div>
+            `).join('');
+        }
+
+        window.removeImage = function(index) {
+            uploadedFiles.splice(index, 1);
+            renderImagePreview();
+        }
 
         // Load Posts Real-time
         function loadCommunityPosts() {
@@ -1320,9 +1415,18 @@
             const downloadLink = document.getElementById('game-link').value;
             const demoLink = document.getElementById('game-demo').value;
             const genre = document.getElementById('game-genre').value;
-            const image = document.getElementById('game-image').value;
             const notes = document.getElementById('game-notes').value;
             
+            // Check files first
+            if (uploadedFiles.length === 0) {
+                alert("Vui lòng tải lên ít nhất 1 hình ảnh minh họa!");
+                return;
+            }
+
+            // Using the first image as the main thumbnail, and all as gallery
+            const mainImage = uploadedFiles[0];
+            const galleryImages = uploadedFiles;
+
             const btn = e.target.querySelector('button');
 
             if (!currentUser) {
@@ -1342,7 +1446,8 @@
                     downloadUrl: downloadLink,
                     demoUrl: demoLink,
                     genre: genre,
-                    image: image,
+                    image: mainImage,
+                    gallery: galleryImages, // Store all images
                     notes: notes,
                     releaseDate: new Date().toISOString().split('T')[0],
                     timestamp: Date.now(),
@@ -1351,10 +1456,12 @@
                 
                 alert("Đăng game thành công! Game của bạn đã xuất hiện trên cửa hàng.");
                 e.target.reset();
+                uploadedFiles = []; // Clear files
+                renderImagePreview();
                 window.switchPage('store', document.querySelector('.nav-link'));
             } catch (error) {
                 console.error("Error submitting game:", error);
-                alert("Lỗi khi đăng game. Vui lòng thử lại.");
+                alert("Lỗi khi đăng game. Vui lòng thử lại (Ảnh có thể quá nặng).");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Đăng game";
@@ -1362,11 +1469,44 @@
         }
 
         // Submit Report
-        window.submitReport = function(e) {
+        window.submitReport = async function(e) {
             e.preventDefault();
-            alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
-            e.target.reset(); 
-            window.switchPage('store', document.querySelector('.nav-link')); 
+            
+            const name = document.getElementById('report-name').value;
+            const email = document.getElementById('report-email').value;
+            const type = document.getElementById('report-type').value;
+            const desc = document.getElementById('report-desc').value;
+            
+            const btn = e.target.querySelector('button');
+
+            if (!currentUser) {
+                alert("Đang kết nối database...");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Đang gửi...";
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'reports'), {
+                    reporterName: name,
+                    reporterEmail: email,
+                    issueType: type,
+                    description: desc,
+                    timestamp: Date.now(),
+                    userId: currentUser.uid
+                });
+                
+                alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
+                e.target.reset();
+                window.switchPage('store', document.querySelector('.nav-link'));
+            } catch (error) {
+                console.error("Error submitting report:", error);
+                alert("Lỗi khi gửi báo cáo. Vui lòng thử lại.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Gửi báo cáo";
+            }
         }
 
         function escapeHtml(text) {
@@ -1399,18 +1539,33 @@
         const staticGames = [
             {
                 id: 1,
-                title: "Game 1",
+                title: "Đua xe",
                 genre: "Nhập vai (RPG)",
-                image: "https://placehold.co/600x400/101010/101010.png",
+                image: "Images/preset/racingracing/Untitled.jpg", 
                 gallery: [
-                    "https://placehold.co/800x400/101010/ffffff.png?text=Slide+1",
-                    "https://placehold.co/800x400/202020/ffffff.png?text=Slide+2",
-                    "https://placehold.co/800x400/303030/ffffff.png?text=Slide+3"
+                    "Images/preset/racingracing/aE66.png", 
+                    "Images/preset/racingracing/azFzls.png", 
+                    "Image/preset/racingracing/Dd34vH.png",
+                    "Images/preset/racingracing/MyCaeM.png",
+                    "Images/preset/racingracing/tdvU_j.png",
+                    "Images/preset/racingracing/uLRTK8.png"
                 ],
-                desc: "Bước vào một tương lai đen tối nơi ánh đèn neon gặp gỡ thép lạnh.",
+                // USE BACKTICKS (`) to write on multiple lines easily like this:
+                desc: `RacingRacing Unity 3D
+                        How to Play?
+                        - Use Arrow Keys or WASD to move
+                        - Press Left Shift to break
+                        - Press Space to horn
+                        - Press Esc to display the Pause Panel
+                        About Game:
+                        - This is a part of my group's project for the end of the term
+                        - Student: Truong Phat Huy
+                        - Group: Hoi Ae Yeu KHTN
+                        - From: University of Science - Ho Chi Minh Vietnam National University
+                        Play Game for fun!`,
                 featured: true,
-                downloadUrl: "https://itch.io/games",
-                releaseDate: "2025-10-12"
+                downloadUrl: "https://itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com/upload2/game/4132387/15889212?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3edfcce40115d057d0b5606758e7e9ee%2F20251220%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251220T103410Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=d3a600bc3f527de65a075d60f3ef81e8166b72fcf1e1fe76548f96ca9718ed3f",
+                releaseDate: "2025-12-19"
             },
             {
                 id: 2,
@@ -1756,6 +1911,13 @@
             
             if(element) element.classList.add('active');
             if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.submitReport = function(e) {
+            e.preventDefault();
+            alert('Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét sớm nhất.');
+            e.target.reset(); 
+            window.switchPage('store', document.querySelector('.nav-link')); 
         }
 
     </script>
