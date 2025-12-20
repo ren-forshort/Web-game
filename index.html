@@ -462,8 +462,8 @@
             padding: 20px;
             border-radius: 4px;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .btn-download {
@@ -486,6 +486,13 @@
         .btn-download:hover {
             background: linear-gradient(90deg, #4da8e0 5%, #154670 95%);
             transform: scale(1.02);
+        }
+        
+        .btn-play {
+            background: linear-gradient(90deg, #75b022 5%, #588a1b 95%);
+        }
+        .btn-play:hover {
+            background: linear-gradient(90deg, #8ed629 5%, #6aa421 95%);
         }
         
         /* Review Section Styles */
@@ -846,7 +853,7 @@
     <!-- Header -->
     <header>
         <div class="brand-container" onclick="switchPage('store', document.querySelector('.nav-link'))">
-            <img src="Images/Logo.png" alt="Logo" class="brand-logo" onerror="this.src='https://placehold.co/60x60/1b2838/66c0f4?text=LOGO'">
+            <img src="fit logo.png" alt="Logo" class="brand-logo" onerror="this.src='https://placehold.co/60x60/1b2838/66c0f4?text=LOGO'">
             <div class="brand-text-col">
                 <span class="brand-small">Hoi AE</span>
                 <span class="brand-main">KHTN</span>
@@ -936,10 +943,16 @@
                 <textarea id="game-desc" class="form-textarea" placeholder="Giới thiệu sơ lược về nội dung và cách chơi..." style="min-height: 100px;" required></textarea>
             </div>
 
-            <!-- 5. Link tải game -->
+            <!-- 5. Link tải game / HTML Toggle -->
             <div class="form-group">
-                <label class="form-label">Link tải game (Google Drive, Dropbox, Itch.io...) <span style="color:red">*</span></label>
+                <label class="form-label">Link tải game / chơi game (Google Drive, Dropbox, Itch.io...) <span style="color:red">*</span></label>
                 <input type="url" id="game-link" class="form-input" placeholder="https://..." required>
+            </div>
+            
+            <!-- Toggle for HTML Game -->
+            <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                <input type="checkbox" id="game-is-html" style="width: auto;">
+                <label for="game-is-html" class="form-label" style="margin: 0; cursor: pointer; color: var(--text-main);">Đây là Game HTML (Chơi trực tiếp trên web)</label>
             </div>
 
             <!-- 6. Link video demo -->
@@ -1653,6 +1666,7 @@
             const demoLink = document.getElementById('game-demo').value;
             const genre = document.getElementById('game-genre').value;
             const notes = document.getElementById('game-notes').value;
+            const isHtmlGame = document.getElementById('game-is-html').checked;
             
             // Check files first
             if (!uploadedCover) {
@@ -1687,6 +1701,7 @@
                     image: uploadedCover, // Single Cover
                     gallery: uploadedGallery, // Array of Gallery
                     notes: notes,
+                    isHtmlGame: isHtmlGame,
                     releaseDate: new Date().toISOString().split('T')[0],
                     timestamp: Date.now(),
                     userId: currentUser.uid
@@ -2082,6 +2097,14 @@ Play Game for fun!`,
             if (selectedGame.downloadUrl) {
                 downloadBtn.href = selectedGame.downloadUrl;
                 downloadBtn.style.display = 'inline-flex';
+                
+                if (selectedGame.isHtmlGame) {
+                    downloadBtn.innerHTML = '<i data-lucide="play" size="18"></i> Chơi ngay';
+                    downloadBtn.style.background = 'linear-gradient(90deg, #75b022 5%, #588a1b 95%)'; // Green
+                } else {
+                    downloadBtn.innerHTML = '<i data-lucide="download" size="18"></i> Tải xuống';
+                    downloadBtn.style.background = ''; // Reset to default blue
+                }
             } else {
                 downloadBtn.style.display = 'none';
             }
