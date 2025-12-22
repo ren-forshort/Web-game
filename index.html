@@ -828,6 +828,56 @@
             padding: 20px;
         }
 
+        /* Footer Styles */
+        footer {
+            background-color: var(--bg-dark);
+            border-top: 1px solid var(--bg-tertiary);
+            padding: 40px 20px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .social-links {
+            display: flex;
+            gap: 25px;
+        }
+        .social-btn {
+            color: var(--text-muted);
+            transition: color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--bg-tertiary);
+        }
+        .social-btn:hover {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .copyright {
+            color: var(--text-muted);
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
         @media (max-width: 900px) {
             .container {
                 grid-template-columns: 1fr;
@@ -947,7 +997,7 @@
 
             <!-- 5. Link tải game / HTML Toggle -->
             <div class="form-group">
-                <label class="form-label">Link tải game / chơi game (Google Drive, Dropbox,Github...) <span style="color:red">*</span></label>
+                <label class="form-label">Link tải game / chơi game (Google Drive, Dropbox, Itch.io...) <span style="color:red">*</span></label>
                 <input type="url" id="game-link" class="form-input" placeholder="https://..." required>
             </div>
             
@@ -1044,37 +1094,88 @@
         <div class="report-header">
             <h1 class="section-title" style="font-size: 24px;">Trung tâm hỗ trợ</h1>
             <p style="color: var(--text-muted); margin-top: 10px;">
-                Chào mừng bạn đến với Cửa hàng Hoi AE KHTN. Dưới đây là hướng dẫn cơ bản để bạn bắt đầu.
+                Chào mừng bạn đến với Cửa hàng Hoi AE KHTN. Dưới đây là hướng dẫn đầy đủ để bạn khám phá, tham gia cộng đồng và chia sẻ trò chơi của mình.
             </p>
         </div>
         
         <div class="support-content" style="color: var(--text-main); line-height: 1.6;">
+            
+            <!-- Section 1: Basic Usage -->
+            <h2 style="color: white; border-bottom: 1px solid var(--bg-tertiary); padding-bottom: 10px; margin-bottom: 20px;">I. Khám phá & Tải game</h2>
+            
             <div style="margin-bottom: 25px;">
                 <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="search" size="20"></i> 1. Tìm kiếm trò chơi
+                    <i data-lucide="search" size="20"></i> 1. Tìm kiếm và Lọc
                 </h3>
-                <p>Bạn có thể tìm kiếm trò chơi yêu thích bằng cách nhập tên vào thanh tìm kiếm ở góc trên bên phải hoặc lọc theo thể loại ở thanh menu bên trái.</p>
+                <p>Sử dụng thanh tìm kiếm ở góc trên bên phải để tìm game theo tên. Bạn cũng có thể lọc game theo thể loại (Hành động, RPG, Parkour...) bằng menu bên trái.</p>
             </div>
 
             <div style="margin-bottom: 25px;">
                 <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="mouse-pointer" size="20"></i> 2. Xem chi tiết
+                    <i data-lucide="download" size="20"></i> 2. Tải xuống và Chơi
                 </h3>
-                <p>Nhấp vào bất kỳ thẻ game nào để mở cửa sổ chi tiết. Tại đây, bạn có thể xem mô tả, ảnh chụp màn hình (gallery) và thông tin phát hành.</p>
+                <p>Nhấp vào thẻ game để xem chi tiết. Nhấn nút <strong>"Tải xuống"</strong> để truy cập link tải (Itch.io/GitHub). Nếu là game có video demo, bạn có thể nhấn nút <strong>"Video Demo"</strong> để xem trước.</p>
             </div>
 
             <div style="margin-bottom: 25px;">
                 <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="download" size="20"></i> 3. Tải xuống
+                    <i data-lucide="star" size="20"></i> 3. Đánh giá và Bình luận
                 </h3>
-                <p>Trong cửa sổ chi tiết, nhấn vào nút <strong>"Tải xuống"</strong> để truy cập đường dẫn tải game (thường là Itch.io hoặc GitHub). Tất cả game trên store đều miễn phí.</p>
+                <p>Trong cửa sổ chi tiết game, bạn có thể xếp hạng sao và viết bình luận để chia sẻ cảm nhận của mình với cộng đồng và nhà phát triển.</p>
             </div>
+
+            <!-- Section 2: Community -->
+            <h2 style="color: white; border-bottom: 1px solid var(--bg-tertiary); padding-bottom: 10px; margin-bottom: 20px; margin-top: 40px;">II. Cộng đồng</h2>
 
             <div style="margin-bottom: 25px;">
                 <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="flag" size="20"></i> 4. Báo cáo vấn đề
+                    <i data-lucide="users" size="20"></i> Tham gia thảo luận
                 </h3>
-                <p>Nếu gặp lỗi hoặc link hỏng, vui lòng truy cập trang <strong>"Báo cáo"</strong> trên thanh menu và gửi thông tin cho chúng tôi.</p>
+                <p>Truy cập tab <strong>"Cộng đồng"</strong> để đăng bài viết, đặt câu hỏi hoặc chia sẻ ý tưởng. Bạn có thể:</p>
+                <ul style="list-style-type: disc; margin-left: 20px; margin-top: 5px; color: var(--text-muted);">
+                    <li>Tạo bài viết mới.</li>
+                    <li><strong>Upvote/Downvote</strong> các bài viết hữu ích.</li>
+                    <li><strong>Trả lời (Reply)</strong> trực tiếp vào bài viết của người khác.</li>
+                </ul>
+            </div>
+
+            <!-- Section 3: Upload Game (Requested Separate Section) -->
+            <h2 style="color: white; border-bottom: 1px solid var(--bg-tertiary); padding-bottom: 10px; margin-bottom: 20px; margin-top: 40px;">III. Hướng dẫn Đăng Game</h2>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: var(--accent-green); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="upload-cloud" size="20"></i> Cách đưa game của bạn lên cửa hàng
+                </h3>
+                <p>Chúng tôi khuyến khích các nhà phát triển chia sẻ sản phẩm của mình. Hãy làm theo các bước sau:</p>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 4px; margin-top: 10px;">
+                    <ol style="list-style-type: decimal; margin-left: 20px; color: var(--text-main);">
+                        <li style="margin-bottom: 10px;">Truy cập tab <strong>"Đăng game"</strong> trên thanh menu.</li>
+                        <li style="margin-bottom: 10px;"><strong>Điền thông tin cơ bản:</strong> Tên game, Tên nhà phát triển, Email liên hệ và Mô tả ngắn.</li>
+                        <li style="margin-bottom: 10px;"><strong>Liên kết (Link):</strong>
+                            <ul style="list-style-type: circle; margin-left: 20px; margin-top: 5px; color: var(--text-muted);">
+                                <li>Link tải game: Đường dẫn đến Google Drive, Itch.io, hoặc GitHub Release.</li>
+                                <li>Link Demo: Link YouTube giới thiệu gameplay (tùy chọn).</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 10px;"><strong>Hình ảnh (Quan trọng):</strong>
+                            <ul style="list-style-type: circle; margin-left: 20px; margin-top: 5px; color: var(--text-muted);">
+                                <li><strong>Ảnh bìa:</strong> Kéo thả 1 ảnh đại diện cho game.</li>
+                                <li><strong>Ảnh thư viện:</strong> Kéo thả nhiều ảnh chụp màn hình (screenshots) để người chơi xem trước.</li>
+                            </ul>
+                        </li>
+                        <li>Nhấn <strong>"Đăng game"</strong> và chờ hệ thống xử lý. Game của bạn sẽ xuất hiện ngay lập tức trên trang chủ!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Section 4: Report -->
+            <h2 style="color: white; border-bottom: 1px solid var(--bg-tertiary); padding-bottom: 10px; margin-bottom: 20px; margin-top: 40px;">IV. Báo cáo & Hỗ trợ khác</h2>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="flag" size="20"></i> Báo cáo vấn đề
+                </h3>
+                <p>Nếu bạn gặp lỗi game, link tải hỏng, hoặc nội dung không phù hợp, vui lòng sử dụng tab <strong>"Báo cáo"</strong> để gửi phản hồi cho quản trị viên.</p>
             </div>
         </div>
     </div>
@@ -1121,8 +1222,8 @@
 
     <!-- Game Details Modal -->
     <div class="modal-overlay" id="game-modal">
+        <!-- ... existing modal content ... -->
         <div class="modal-content">
-            <!-- Modal Gallery Container -->
             <div class="modal-gallery-container">
                 <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
                 <button class="modal-arrow left" onclick="prevModalSlide()"><i data-lucide="chevron-left"></i></button>
@@ -1178,6 +1279,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://facebook.com" target="_blank" class="social-btn" title="Facebook">
+                    <i data-lucide="facebook"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="social-btn" title="Instagram">
+                    <i data-lucide="instagram"></i>
+                </a>
+                <a href="https://tiktok.com" target="_blank" class="social-btn" title="TikTok">
+                    <!-- Using 'video' icon as fallback if 'tiktok' icon is not available in the specific lucide version -->
+                    <i data-lucide="video"></i>
+                </a>
+            </div>
+            <div class="contact-info">
+                <i data-lucide="mail" size="16"></i>
+                <span>contact@hoiaekhtn.store</span>
+            </div>
+            <div class="copyright">
+                © 2024 Hoi AE KHTN Store. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -1821,8 +1947,22 @@ About Game:
 - From: University of Science - Ho Chi Minh Vietnam National University
 Play Game for fun!`,
                 featured: true,
-                downloadUrl: "https://github.com/TruongPhatHuy2007/RacingRacing/releases/download/0.1.0/RacingRacingGame.zip",
+                downloadUrl: "https://itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com/upload2/game/4132387/15889212?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3edfcce40115d057d0b5606758e7e9ee%2F20251220%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251220T103410Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=d3a600bc3f527de65a075d60f3ef81e8166b72fcf1e1fe76548f96ca9718ed3f",
                 releaseDate: "2025-12-19"
+            },
+            {
+                id: 2,
+                title: "Game 2",
+                genre: "Hành động",
+                image: "https://placehold.co/600x400/2b2005/2b2005.png",
+                gallery: [
+                    "https://placehold.co/800x400/2b2005/ffffff.png?text=Action+1",
+                    "https://placehold.co/800x400/4a3810/ffffff.png?text=Action+2"
+                ],
+                desc: "Trỗi dậy, Kẻ bị lu mờ, và được dẫn dắt bởi ân sủng.",
+                featured: true,
+                downloadUrl: "https://github.com",
+                releaseDate: "2024-02-25"
             },
             {
                 id: 3,
