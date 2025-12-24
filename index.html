@@ -462,9 +462,9 @@
             padding: 20px;
             border-radius: 4px;
             display: flex;
-            flex-direction: column; /* CHANGED: Stack vertically */
-            gap: 15px; /* Add spacing */
-            align-items: stretch; /* Stretch to width */
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
         }
 
         .btn-download {
@@ -488,13 +488,6 @@
         .btn-download:hover {
             background: linear-gradient(90deg, #4da8e0 5%, #154670 95%);
             transform: scale(1.02);
-        }
-        
-        .btn-play {
-            background: linear-gradient(90deg, #75b022 5%, #588a1b 95%);
-        }
-        .btn-play:hover {
-            background: linear-gradient(90deg, #8ed629 5%, #6aa421 95%);
         }
         
         /* Review Section Styles */
@@ -644,6 +637,11 @@
             color: white;
         }
 
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         /* Drag and Drop Styles */
         .drop-zone {
             border: 2px dashed var(--bg-tertiary);
@@ -679,6 +677,11 @@
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid var(--bg-tertiary);
+        }
+        .preview-cover-container {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
         }
         .remove-img {
             position: absolute;
@@ -995,16 +998,10 @@
                 <textarea id="game-desc" class="form-textarea" placeholder="Giới thiệu sơ lược về nội dung và cách chơi..." style="min-height: 100px;" required></textarea>
             </div>
 
-            <!-- 5. Link tải game / HTML Toggle -->
+            <!-- 5. Link tải game -->
             <div class="form-group">
-                <label class="form-label">Link tải game / chơi game (Google Drive, Dropbox, Itch.io...) <span style="color:red">*</span></label>
+                <label class="form-label">Link tải game (Google Drive, Dropbox, Itch.io...) <span style="color:red">*</span></label>
                 <input type="url" id="game-link" class="form-input" placeholder="https://..." required>
-            </div>
-            
-            <!-- Toggle for HTML Game -->
-            <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
-                <input type="checkbox" id="game-is-html" style="width: auto;">
-                <label for="game-is-html" class="form-label" style="margin: 0; cursor: pointer; color: var(--text-main);">Đây là Game HTML (Chơi trực tiếp trên web)</label>
             </div>
 
             <!-- 6. Link video demo -->
@@ -1139,7 +1136,7 @@
                 </ul>
             </div>
 
-            <!-- Section 3: Upload Game (Requested Separate Section) -->
+            <!-- Section 3: Upload Game -->
             <h2 style="color: white; border-bottom: 1px solid var(--bg-tertiary); padding-bottom: 10px; margin-bottom: 20px; margin-top: 40px;">III. Hướng dẫn Đăng Game</h2>
             
             <div style="margin-bottom: 25px;">
@@ -1222,8 +1219,8 @@
 
     <!-- Game Details Modal -->
     <div class="modal-overlay" id="game-modal">
-        <!-- ... existing modal content ... -->
         <div class="modal-content">
+            <!-- Modal Gallery Container -->
             <div class="modal-gallery-container">
                 <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
                 <button class="modal-arrow left" onclick="prevModalSlide()"><i data-lucide="chevron-left"></i></button>
@@ -1849,7 +1846,7 @@
             }
         }
 
-        // Submit Report - Updated to send to Database
+        // Submit Report
         window.submitReport = async function(e) {
             e.preventDefault();
             
@@ -1858,7 +1855,7 @@
             const type = document.getElementById('report-type').value;
             const desc = document.getElementById('report-desc').value;
             
-            const btn = e.target.querySelector('.btn-submit');
+            const btn = e.target.querySelector('button');
 
             if (!currentUser) {
                 alert("Đang kết nối database...");
@@ -1945,7 +1942,7 @@ About Game:
 - From: University of Science - Ho Chi Minh Vietnam National University
 Play Game for fun!`,
                 featured: true,
-                downloadUrl: "https://itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com/upload2/game/4132387/15889212?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3edfcce40115d057d0b5606758e7e9ee%2F20251220%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251220T103410Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=d3a600bc3f527de65a075d60f3ef81e8166b72fcf1e1fe76548f96ca9718ed3f",
+                downloadUrl: "https://github.com/TruongPhatHuy2007/RacingRacing/releases/download/0.1.0/RacingRacingGame.zip",
                 releaseDate: "2025-12-19"
             }
         ];
@@ -2079,14 +2076,9 @@ Play Game for fun!`,
             if (selectedGame.downloadUrl) {
                 downloadBtn.href = selectedGame.downloadUrl;
                 downloadBtn.style.display = 'inline-flex';
-                
-                if (selectedGame.isHtmlGame) {
-                    downloadBtn.innerHTML = '<i data-lucide="play" size="18"></i> Chơi ngay';
-                    downloadBtn.style.background = 'linear-gradient(90deg, #75b022 5%, #588a1b 95%)'; // Green
-                } else {
-                    downloadBtn.innerHTML = '<i data-lucide="download" size="18"></i> Tải xuống';
-                    downloadBtn.style.background = ''; // Reset to default blue
-                }
+                // Reset styling to default blue download button
+                downloadBtn.innerHTML = '<i data-lucide="download" size="18"></i> Tải xuống';
+                downloadBtn.style.background = ''; 
             } else {
                 downloadBtn.style.display = 'none';
             }
