@@ -1794,7 +1794,6 @@
             const demoLink = document.getElementById('game-demo').value;
             const genre = document.getElementById('game-genre').value;
             const notes = document.getElementById('game-notes').value;
-            const isHtmlGame = document.getElementById('game-is-html').checked;
             
             // Check files first
             if (!uploadedCover) {
@@ -1807,14 +1806,19 @@
                  return;
             }
 
-            const btn = e.target.querySelector('button');
+            // FIX: Chọn chính xác nút submit thay vì nút 'button' bất kỳ (tránh chọn nhầm nút xóa ảnh)
+            const btn = e.target.querySelector('.btn-submit');
 
             if (!currentUser) {
                 alert("Đang kết nối database...");
                 return;
             }
 
+            // Safety check
+            if (btn.disabled) return;
+
             btn.disabled = true;
+            const originalText = btn.innerText;
             btn.innerText = "Đang xử lý...";
 
             try {
@@ -1829,7 +1833,6 @@
                     image: uploadedCover, // Single Cover
                     gallery: uploadedGallery, // Array of Gallery
                     notes: notes,
-                    isHtmlGame: isHtmlGame,
                     releaseDate: new Date().toISOString().split('T')[0],
                     timestamp: Date.now(),
                     userId: currentUser.uid
