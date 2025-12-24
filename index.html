@@ -1806,7 +1806,6 @@
                  return;
             }
 
-            // FIX: Chọn chính xác nút submit thay vì nút 'button' bất kỳ (tránh chọn nhầm nút xóa ảnh)
             const btn = e.target.querySelector('.btn-submit');
 
             if (!currentUser) {
@@ -1814,11 +1813,7 @@
                 return;
             }
 
-            // Safety check
-            if (btn.disabled) return;
-
             btn.disabled = true;
-            const originalText = btn.innerText;
             btn.innerText = "Đang xử lý...";
 
             try {
@@ -1854,7 +1849,7 @@
             }
         }
 
-        // Submit Report
+        // Submit Report - Updated to send to Database
         window.submitReport = async function(e) {
             e.preventDefault();
             
@@ -1863,7 +1858,7 @@
             const type = document.getElementById('report-type').value;
             const desc = document.getElementById('report-desc').value;
             
-            const btn = e.target.querySelector('button');
+            const btn = e.target.querySelector('.btn-submit');
 
             if (!currentUser) {
                 alert("Đang kết nối database...");
