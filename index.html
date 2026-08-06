@@ -1224,7 +1224,13 @@
             <div class="modal-gallery-container">
                 <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
                 <button class="modal-arrow left" onclick="prevModalSlide()"><i data-lucide="chevron-left"></i></button>
+                
+                <!-- Image Display -->
                 <img src="" alt="Game Screenshot" class="modal-gallery-img" id="modal-gallery-img">
+                
+                <!-- Video Player Display -->
+                <iframe id="modal-gallery-video" class="modal-gallery-img" style="display: none; border: none; width: 100%; height: 100%;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                
                 <button class="modal-arrow right" onclick="nextModalSlide()"><i data-lucide="chevron-right"></i></button>
             </div>
 
@@ -2106,9 +2112,28 @@ Play Game for fun!`,
         }
 
         window.updateModalGallery = function() {
-            const images = selectedGame.gallery || [selectedGame.image];
+            const galleryItems = selectedGame.gallery || [selectedGame.image];
+            const item = galleryItems[currentModalImageIndex];
+            
             const imgElement = document.getElementById('modal-gallery-img');
-            imgElement.src = images[currentModalImageIndex];
+            const videoElement = document.getElementById('modal-gallery-video');
+
+            // Extract the URL whether the item is an Object or a String
+            const itemUrl = (typeof item === 'object') ? item.url : item;
+            const isVideo = (typeof item === 'object') && item.type === 'video';
+
+            if (isVideo) {
+                // Hide image, show YouTube video player
+                imgElement.style.display = 'none';
+                videoElement.src = itemUrl;
+                videoElement.style.display = 'block';
+            } else {
+                // Stop video playback, hide iframe, show image
+                videoElement.src = ''; 
+                videoElement.style.display = 'none';
+                imgElement.src = itemUrl;
+                imgElement.style.display = 'block';
+            }
         }
 
         window.nextModalSlide = function() {
@@ -2126,6 +2151,9 @@ Play Game for fun!`,
         }
 
         window.closeModal = function() {
+            const videoElement = document.getElementById('modal-gallery-video');
+            if (videoElement) videoElement.src = ''; // Stop video on modal close
+
             modal.classList.remove('open');
             document.body.style.overflow = 'auto';
         }
